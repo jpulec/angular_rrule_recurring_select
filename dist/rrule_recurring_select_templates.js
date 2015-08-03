@@ -105,7 +105,7 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
             scope.calculateYearlyRRule();
         }
 
-        if(!_.isUndefined(scope.rule))
+        if(!_.isUndefined(scope.rule) && !_.isEmpty(scope.recurrenceRule))
           scope.rule = scope.recurrenceRule.toString();
       };
 
