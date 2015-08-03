@@ -252,7 +252,7 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
       };
 
       scope.ruleChanged = function() {
-        $scope.resetData();
+        scope.resetData();
         if (!_.isEmpty(scope.rule)) {
           scope.parseRule(scope.rule);
         }
