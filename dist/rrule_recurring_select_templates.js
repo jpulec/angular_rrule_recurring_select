@@ -1,6 +1,6 @@
 angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [function() {
   return {
-    restrict: 'E',
+    restrict: 'AE',
     scope: {
       rule: "=",
       okClick: "=",
@@ -17,8 +17,6 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
         scope.$watch(scope.currentRule, scope.ruleChanged);
         if(!_.isEmpty(scope.rule))
           scope.parseRule(scope.rule);
-        else
-          scope.calculateRRule();
       };
 
       scope.initFrequencies = function() {
@@ -62,6 +60,7 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
         scope.initMonthlyDays();
         scope.initMonthlyWeeklyDays();
         scope.interval = '';
+        scope.recurrenceRule = null;
       };
 
       scope.daysOfWeek = function() {
@@ -88,6 +87,10 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
       };
 
       scope.calculateRRule = function() {
+        var interval = parseInt(scope.interval);
+        if (!interval)
+          return
+
         switch(scope.selectedFrequency.type) {
           case 'day':
             scope.calculateDailyRRule();
@@ -126,6 +129,9 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
           return day.selected;
         }).pluck('value').value();
 
+        if (!selectedDays.length)
+          return
+
         scope.recurrenceRule = new RRule({
           freq: RRule.WEEKLY,
           interval: scope.calculateInterval(),
@@ -146,6 +152,9 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
           return day.selected;
         }).pluck('value').value();
 
+        if (!selectedDays.length)
+          return
+
         scope.recurrenceRule = new RRule({
           freq: RRule.MONTHLY,
           interval: scope.calculateInterval(),
@@ -158,6 +167,9 @@ angular.module('rruleRecurringSelect', []).directive('rruleRecurringSelect', [fu
         var selectedDays = _(scope.monthWeeklyDays).flatten().select(function(day) {
           return day.selected;
         }).pluck('value').value();
+
+        if (!selectedDays.length)
+          return
 
         scope.recurrenceRule = new RRule({
           freq: RRule.MONTHLY,
